@@ -1,3 +1,4 @@
+#import libraries
 import nltk
 
 try:
@@ -8,16 +9,17 @@ except LookupError:
 import streamlit as st
 import pickle
 
+# Load feature extractor from pickle files
 with open("tfidf_vectorizer.pkl", "rb") as f:
     feature_extraction = pickle.load(f)
 
-# Load model and feature extractor from pickle files
+# Load model from pickle files
 with open("linear_svm_model.pkl", "rb") as f:
     model = pickle.load(f)
 
 st.set_page_config(page_title="Email Spam Message Classifier", page_icon="✉️", layout="wide")
 
-# Custom CSS for precise styling
+# For precise styling
 st.markdown("""
     <style>
     .big-title {
@@ -54,26 +56,26 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Main title, matches your screenshot
+# Main title
 st.markdown('<div class="big-title">Email Spam Message Classifier</div>', unsafe_allow_html=True)
 
 # Label
 st.markdown('<div class="custom-label">Enter your mail context:</div>', unsafe_allow_html=True)
 
 # Single large textarea
-mail_text = st.text_area("", height=90, key="mailtext", help="", placeholder="", label_visibility="collapsed")
+mail_text = st.text_area("", height=90, key="mail_text", help="", placeholder="", label_visibility="collapsed")
 
-# Blue Analyze button, exactly in screenshot's place
+# Blue Analyze button
 analyze = st.button("Analyze")
 
-# You can add backend prediction logic here
+# backend prediction logic
 if analyze:
     if mail_text.strip() == "":
         st.warning("Please enter your mail context.")
     else:
         # Transform input to vectorized form
         features = feature_extraction.transform([mail_text])
-        # Make prediction
+        # prediction
         pred = model.predict(features)[0]
         # Map to label
         result = "Spam" if pred == 0 else "Not Spam"
